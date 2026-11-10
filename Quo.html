@@ -1,0 +1,944 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Quo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#06080f;--surface:#0d1119;--surface2:#111827;
+  --border:#1e2535;--divider:#161c2a;
+  --text:#f0f4ff;--muted:#7986a3;--subtle:#3d4a63;
+  --p:#5b6ef8;--p2:#8b8bff;--p3:#4ade80;--p4:#f97316;--p5:#38bdf8;
+  --red:#f43f5e;--green:#22c55e;--amber:#f59e0b;
+  --glow:0 0 24px rgba(91,110,248,.35);
+  --glow2:0 0 40px rgba(91,110,248,.15);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;overflow:hidden;}
+#app{display:flex;height:100%;}
+
+/* ── SIDEBAR ── */
+#sidebar{width:210px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:relative;overflow:hidden;}
+#sidebar::before{content:'';position:absolute;top:-40px;left:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(91,110,248,.12) 0%,transparent 70%);pointer-events:none;}
+.sb-logo{padding:14px 14px 10px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border);}
+.logo-mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--p),var(--p2));display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:13px;color:#fff;box-shadow:0 0 14px rgba(91,110,248,.5);flex-shrink:0;}
+.logo-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;letter-spacing:-.3px;}
+.sb-scroll{flex:1;overflow-y:auto;padding:8px 0 12px;}
+.sb-sec{padding:10px 13px 4px;font-size:9.5px;font-weight:700;color:var(--subtle);letter-spacing:.9px;text-transform:uppercase;}
+.sb-item{padding:7px 11px;margin:1px 7px;border-radius:7px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-weight:500;transition:all .15s;user-select:none;}
+.sb-item:hover{background:var(--divider);color:var(--text);}
+.sb-item.active{background:rgba(91,110,248,.14);color:var(--p2);}
+.sb-item.active .sb-icon{filter:drop-shadow(0 0 5px rgba(91,110,248,.7));}
+.sb-icon{flex-shrink:0;opacity:.7;}
+.sb-item.active .sb-icon{opacity:1;}
+.sb-badge{margin-left:auto;border-radius:9px;font-size:9.5px;font-weight:700;padding:1px 6px;}
+.sb-badge.purple{background:rgba(91,110,248,.2);color:var(--p2);}
+.sb-badge.green{background:rgba(34,197,94,.15);color:var(--green);}
+.sb-badge.amber{background:rgba(245,158,11,.15);color:var(--amber);}
+.squad-toggle{margin:10px 10px 4px;display:flex;background:var(--divider);border-radius:8px;padding:2px;gap:2px;}
+.squad-btn{flex:1;padding:5px 0;text-align:center;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .18s;}
+.squad-btn.on{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;box-shadow:0 0 10px rgba(91,110,248,.4);}
+
+/* ── TOPBAR ── */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+#topbar{height:48px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;position:relative;overflow:hidden;}
+#topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(91,110,248,.5),transparent);}
+.tb-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;}
+.tb-pill{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
+.pill-live{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2);}
+.pill-warn{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:7px;}
+.btn{padding:5px 12px;border-radius:7px;border:none;cursor:pointer;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;transition:all .18s;}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.btn-ghost:hover{border-color:var(--p);color:var(--p2);}
+.btn-primary{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;box-shadow:0 0 12px rgba(91,110,248,.35);}
+.btn-primary:hover{filter:brightness(1.1);box-shadow:var(--glow);}
+.btn-sm{padding:3px 8px;font-size:10px;}
+
+/* ── PANELS ── */
+.panel{display:none;flex:1;overflow:hidden;}
+.panel.active{display:flex;}
+
+/* ══ GATEWAY PANEL ══ */
+#panel-gateway{flex-direction:row;overflow:hidden;}
+.gw-left{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.funnel-wrap{padding:16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.funnel-title{font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:.7px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.funnel-stages{display:flex;gap:0;}
+.funnel-stage{flex:1;position:relative;}
+.funnel-bar{height:52px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;color:#fff;position:relative;overflow:hidden;cursor:pointer;transition:filter .18s;}
+.funnel-bar:hover{filter:brightness(1.2);}
+.funnel-bar::after{content:'';position:absolute;right:-1px;top:0;bottom:0;width:1px;background:var(--bg);z-index:2;}
+.funnel-label{font-size:9.5px;color:var(--muted);text-align:center;margin-top:5px;}
+.funnel-pct{font-size:10px;color:var(--subtle);text-align:center;margin-top:1px;}
+.arrow{position:absolute;right:-8px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--subtle);z-index:3;}
+.gw-scroll{flex:1;overflow-y:auto;}
+.events-feed{padding:14px 16px;border-bottom:1px solid var(--border);}
+.ev-title{font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:.7px;text-transform:uppercase;margin-bottom:9px;}
+.ev-item{display:flex;align-items:center;gap:9px;padding:5px 0;border-bottom:1px solid var(--divider);}
+.ev-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.ev-text{flex:1;font-size:12px;}
+.ev-time{font-size:10px;color:var(--subtle);font-family:'JetBrains Mono',sans-serif;flex-shrink:0;}
+.gw-right{width:280px;border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
+.gr-tabs{display:flex;border-bottom:1px solid var(--border);}
+.gr-tab{flex:1;padding:8px 0;text-align:center;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+.gr-tab.active{color:var(--p2);border-bottom-color:var(--p);}
+.gr-body{flex:1;overflow-y:auto;padding:12px;}
+/* checkout preview */
+.checkout-preview{background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.cp-header{background:linear-gradient(135deg,rgba(91,110,248,.15),rgba(139,139,255,.08));padding:12px 14px;border-bottom:1px solid var(--border);}
+.cp-brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px;}
+.cp-step{display:flex;gap:5px;margin-top:7px;}
+.cp-step-dot{width:20px;height:3px;border-radius:2px;}
+.cp-body{padding:12px 14px;}
+.cp-plan{background:var(--divider);border-radius:7px;padding:9px 10px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;}
+.cp-plan-name{font-weight:600;font-size:12px;}
+.cp-plan-price{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;color:var(--p2);}
+.cp-input{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;color:var(--text);font-family:'Inter',sans-serif;width:100%;margin-bottom:6px;}
+.cp-btn{width:100%;padding:8px;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border:none;border-radius:7px;font-weight:700;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 0 10px rgba(91,110,248,.4);}
+/* trial meter */
+.trial-wrap{padding:12px 14px;}
+.trial-label{font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;}
+.trial-bar{height:8px;background:var(--divider);border-radius:4px;overflow:hidden;margin-bottom:4px;}
+.trial-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--p),var(--p3));transition:width .6s ease;}
+.trial-row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:10px;}
+/* billing table */
+.inv-row{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid var(--divider);}
+.inv-status{font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;}
+.inv-paid{background:rgba(34,197,94,.12);color:var(--green);}
+.inv-open{background:rgba(245,158,11,.12);color:var(--amber);}
+/* metrics row */
+.metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);}
+.metric{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:11px 13px;position:relative;overflow:hidden;}
+.metric::before{content:'';position:absolute;top:-20px;right:-20px;width:60px;height:60px;border-radius:50%;background:var(--mc,rgba(91,110,248,.08));}
+.metric-label{font-size:9.5px;font-weight:700;color:var(--subtle);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px;}
+.metric-val{font-size:22px;font-weight:700;font-family:'Space Grotesk',sans-serif;}
+.metric-delta{font-size:10px;font-weight:600;margin-top:2px;}
+.up{color:var(--green);} .dn{color:var(--red);}
+
+/* ══ CONNECT PANEL ══ */
+#panel-connect{flex-direction:row;overflow:hidden;}
+.conn-left{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.integrations-grid{padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.ig-title{font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px;}
+.ig-cards{display:flex;gap:8px;flex-wrap:wrap;}
+.ig-card{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:10px 13px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:9px;min-width:160px;}
+.ig-card:hover{border-color:var(--p);box-shadow:0 0 10px rgba(91,110,248,.2);}
+.ig-card.active-int{border-color:var(--p);background:rgba(91,110,248,.08);box-shadow:0 0 14px rgba(91,110,248,.25);}
+.ig-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.ig-name{font-weight:600;font-size:12px;}
+.ig-status{font-size:10px;font-weight:600;}
+.ig-status.ok{color:var(--green);}
+.ig-status.warn{color:var(--amber);}
+.ig-status.off{color:var(--muted);}
+.webhook-panel{flex:1;overflow-y:auto;padding:14px 16px;}
+.wh-title{font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px;}
+.wh-event{background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:7px;overflow:hidden;}
+.wh-header{padding:8px 12px;display:flex;align-items:center;gap:9px;cursor:pointer;}
+.wh-method{font-family:'JetBrains Mono',sans-serif;font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:4px;flex-shrink:0;}
+.wh-post{background:rgba(91,110,248,.15);color:var(--p2);}
+.wh-get{background:rgba(56,189,248,.15);color:var(--p5);}
+.wh-name{font-size:12px;font-weight:600;flex:1;}
+.wh-status{font-size:10px;font-weight:700;}
+.wh-ok{color:var(--green);} .wh-fail{color:var(--red);}
+.wh-body{background:var(--bg);border-top:1px solid var(--border);padding:10px 12px;display:none;font-family:'JetBrains Mono',sans-serif;font-size:11px;color:var(--muted);line-height:1.6;}
+.wh-body.open{display:block;}
+.code-hl{color:var(--p2);}
+.conn-right{width:280px;border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
+.crm-sync{flex:1;overflow-y:auto;padding:12px;}
+.crm-contact{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:7px;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:9px;}
+.crm-contact:hover{border-color:var(--p);background:rgba(91,110,248,.06);}
+.crm-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.crm-name{font-size:12px;font-weight:600;}
+.crm-role{font-size:10px;color:var(--muted);}
+.crm-sync-badge{margin-left:auto;font-size:9.5px;padding:2px 7px;border-radius:10px;font-weight:700;}
+.synced{background:rgba(34,197,94,.12);color:var(--green);}
+.pending-sync{background:rgba(245,158,11,.12);color:var(--amber);}
+
+/* ══ COMMS PANEL ══ */
+#panel-comms{flex-direction:row;overflow:hidden;}
+.comms-threads{width:240px;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
+.ct-search{padding:9px 10px;border-bottom:1px solid var(--border);}
+.ct-input{width:100%;background:var(--divider);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-size:12px;color:var(--text);font-family:'Inter',sans-serif;outline:none;}
+.ct-input::placeholder{color:var(--subtle);}
+.ct-list{flex:1;overflow-y:auto;}
+.ct-item{padding:9px 12px;border-bottom:1px solid var(--divider);cursor:pointer;transition:background .12s;}
+.ct-item:hover{background:var(--divider);}
+.ct-item.active{background:rgba(91,110,248,.1);}
+.ct-name{font-size:12px;font-weight:600;display:flex;justify-content:space-between;}
+.ct-preview{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ct-time{font-size:10px;color:var(--subtle);}
+.ct-unread{width:7px;height:7px;border-radius:50%;background:var(--p);flex-shrink:0;margin-top:3px;}
+.comms-view{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.cv-header{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.cv-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.cv-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.sms-bubble{max-width:68%;padding:9px 13px;border-radius:12px;font-size:13px;line-height:1.6;}
+.sms-out{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;align-self:flex-end;border-radius:12px 4px 12px 12px;}
+.sms-in{background:var(--surface2);border:1px solid var(--border);align-self:flex-start;border-radius:4px 12px 12px 12px;}
+.sms-time{font-size:10px;color:var(--subtle);margin-top:3px;}
+.sms-time.right{text-align:right;}
+.cv-footer{padding:9px 14px;border-top:1px solid var(--border);display:flex;gap:7px;flex-shrink:0;}
+.cv-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 11px;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;outline:none;}
+.cv-input:focus{border-color:var(--p);}
+.cv-send{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border:none;border-radius:7px;padding:7px 13px;cursor:pointer;font-weight:700;font-size:12px;box-shadow:0 0 10px rgba(91,110,248,.35);}
+.comms-right{width:220px;border-left:1px solid var(--border);overflow-y:auto;padding:12px;flex-shrink:0;}
+
+/* ══ CODE PANEL ══ */
+#panel-code{flex-direction:column;overflow:hidden;}
+.code-tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto;flex-shrink:0;background:var(--surface);}
+.code-tab{padding:9px 14px;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;transition:all .15s;}
+.code-tab:hover{color:var(--text);}
+.code-tab.active{color:var(--p2);border-bottom-color:var(--p);}
+.code-content{flex:1;overflow-y:auto;}
+.code-block{padding:16px;font-family:'JetBrains Mono',sans-serif;font-size:12px;line-height:1.75;color:#9bb4d6;}
+.ck{color:#c792ea;} .cs{color:#c3e88d;} .cn{color:#82aaff;}
+.cf{color:#89ddff;} .cc{color:#546e7a;font-style:italic;} .co{color:#ffcb6b;}
+pre{white-space:pre-wrap;word-break:break-word;}
+
+/* ══ QUEUE PANEL ══ */
+#panel-queue{flex-direction:column;overflow-y:auto;padding:16px;}
+.queue-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.queue-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden;}
+.queue-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--qc,linear-gradient(90deg,var(--p),var(--p2)));}
+.qc-title{font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px;}
+.qc-num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;color:var(--text);}
+.qc-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+.msg-event{background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:7px;overflow:hidden;}
+.me-header{padding:9px 13px;display:flex;align-items:center;gap:9px;cursor:pointer;}
+.me-topic{font-family:'JetBrains Mono',sans-serif;font-size:11px;color:var(--p2);flex:1;font-weight:500;}
+.me-status{font-size:10px;font-weight:700;}
+.me-ok{color:var(--green);} .me-fail{color:var(--red);} .me-lag{color:var(--amber);}
+.me-lag-ms{font-family:'JetBrains Mono',sans-serif;font-size:10px;color:var(--muted);}
+.me-body{background:var(--bg);padding:10px 13px;border-top:1px solid var(--border);display:none;font-family:'JetBrains Mono',sans-serif;font-size:11px;line-height:1.6;color:var(--muted);}
+.me-body.open{display:block;}
+
+/* modal + toast */
+#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(2px);}
+#modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:420px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 40px rgba(91,110,248,.1);}
+.modal-header{padding:15px 17px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.modal-header h3{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;}
+.modal-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:17px;line-height:1;}
+.modal-body{padding:16px 17px;}
+.fl{margin-bottom:11px;}
+.fl label{display:block;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;}
+.fi{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;}
+.fi:focus{border-color:var(--p);}
+.modal-footer{padding:11px 17px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:7px;}
+#toast{position:fixed;bottom:16px;right:16px;background:linear-gradient(135deg,var(--surface2),var(--surface));border:1px solid var(--border);color:var(--text);border-radius:9px;padding:10px 16px;font-size:12px;font-weight:600;display:none;z-index:300;box-shadow:0 8px 24px rgba(0,0,0,.4),0 0 20px rgba(91,110,248,.15);}
+
+/* scrollbars */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+</style>
+
+<div id="app">
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sb-logo">
+    <div class="logo-mark">Q</div>
+    <div class="logo-name">Quo</div>
+  </div>
+  <div class="sb-scroll">
+    <div class="squad-toggle">
+      <div class="squad-btn on" id="sq-gateway" onclick="setSquad('gateway')">Gateway</div>
+      <div class="squad-btn" id="sq-connect" onclick="setSquad('connect')">Connect</div>
+    </div>
+    <div class="sb-sec">Squad</div>
+    <div class="sb-item active" id="nav-gateway" onclick="showPanel('gateway',this)">
+      <svg class="sb-icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 10l3-3 2.5 2.5L12 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Signup Funnel
+    </div>
+    <div class="sb-item" id="nav-connect" onclick="showPanel('connect',this)">
+      <svg class="sb-icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="3" cy="7" r="2" stroke="currentColor" stroke-width="1.4"/><circle cx="11" cy="3" r="2" stroke="currentColor" stroke-width="1.4"/><circle cx="11" cy="11" r="2" stroke="currentColor" stroke-width="1.4"/><path d="M5 7h3M11 5v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Integrations
+    </div>
+    <div class="sb-item" id="nav-comms" onclick="showPanel('comms',this)">
+      <svg class="sb-icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h10a1 1 0 011 1v6a1 1 0 01-1 1H8l-2 2-2-2H2a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4"/></svg>
+      Messaging
+      <span class="sb-badge purple">3</span>
+    </div>
+    <div class="sb-sec">Engineering</div>
+    <div class="sb-item" id="nav-queue" onclick="showPanel('queue',this)">
+      <svg class="sb-icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M2 7h7M2 10h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Message Queue
+      <span class="sb-badge green">847/s</span>
+    </div>
+    <div class="sb-item" id="nav-code" onclick="showPanel('code',this)">
+      <svg class="sb-icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4.5 4L2 7l2.5 3M9.5 4L12 7l-2.5 3M8 3l-2 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Codebase
+    </div>
+    <div class="sb-sec">Ops</div>
+    <div class="sb-item" onclick="showToast('Linear board — 24 open tickets')">
+      <svg class="sb-icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="8" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="2" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="8" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.4"/></svg>
+      Linear Board
+      <span class="sb-badge amber">24</span>
+    </div>
+    <div class="sb-item" onclick="showToast('Datadog dashboard open')">
+      <svg class="sb-icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.4"/><path d="M7 4v3l2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Observability
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div id="topbar">
+    <div class="tb-title" id="tb-title">Gateway Squad — Signup Funnel</div>
+    <div class="tb-pill pill-live" id="tb-pill">● p99 &lt; 180ms</div>
+    <div class="tb-right">
+      <button class="btn btn-ghost btn-sm" onclick="showToast('Storybook opened — 84 components')">Storybook</button>
+      <button class="btn btn-ghost btn-sm" onclick="openModal('newPR')">Open PR</button>
+      <button class="btn btn-primary btn-sm" onclick="showToast('Deployed to staging ✓')">Deploy →</button>
+    </div>
+  </div>
+
+  <!-- GATEWAY PANEL -->
+  <div class="panel active" id="panel-gateway">
+    <div class="gw-left">
+      <div class="metrics-row">
+        <div class="metric" style="--mc:rgba(91,110,248,.1)"><div class="metric-label">MRR</div><div class="metric-val" style="color:var(--p2)">$84K</div><div class="metric-delta up">↑ 12% MoM</div></div>
+        <div class="metric" style="--mc:rgba(34,197,94,.08)"><div class="metric-label">Trials started</div><div class="metric-val" style="color:var(--green)">247</div><div class="metric-delta up">↑ 23 today</div></div>
+        <div class="metric" style="--mc:rgba(249,115,22,.08)"><div class="metric-label">Conversion</div><div class="metric-val" style="color:var(--p4)">38%</div><div class="metric-delta dn">↓ 2% vs last</div></div>
+        <div class="metric" style="--mc:rgba(56,189,248,.08)"><div class="metric-label">Active #s ported</div><div class="metric-val" style="color:var(--p5)">1,204</div><div class="metric-delta up">↑ 88 this week</div></div>
+      </div>
+      <div class="funnel-wrap">
+        <div class="funnel-title">Signup → Paid Conversion Funnel<button class="btn btn-ghost btn-sm" onclick="showToast('Funnel breakdown exported')">Export</button></div>
+        <div class="funnel-stages" id="funnel"></div>
+      </div>
+      <div class="gw-scroll">
+        <div class="events-feed">
+          <div class="ev-title">Live Events</div>
+          <div id="events-feed"></div>
+        </div>
+      </div>
+    </div>
+    <div class="gw-right">
+      <div class="gr-tabs">
+        <div class="gr-tab active" onclick="switchGrTab('checkout',this)">Checkout</div>
+        <div class="gr-tab" onclick="switchGrTab('billing',this)">Billing</div>
+        <div class="gr-tab" onclick="switchGrTab('verify',this)">Verify</div>
+      </div>
+      <div class="gr-body">
+        <div id="gr-checkout">
+          <div class="checkout-preview">
+            <div class="cp-header">
+              <div class="cp-brand"><div class="logo-mark" style="width:20px;height:20px;font-size:10px">Q</div>Quo</div>
+              <div class="cp-step">
+                <div class="cp-step-dot" style="background:var(--p)"></div>
+                <div class="cp-step-dot" style="background:var(--p);opacity:.4"></div>
+                <div class="cp-step-dot" style="background:var(--border)"></div>
+              </div>
+            </div>
+            <div class="cp-body">
+              <div class="cp-plan">
+                <div>
+                  <div class="cp-plan-name">Growth Plan</div>
+                  <div style="font-size:10px;color:var(--muted)">3 users · 2,000 SMS/mo</div>
+                </div>
+                <div class="cp-plan-price">$49/mo</div>
+              </div>
+              <input class="cp-input" placeholder="Card number" value="4242 4242 4242 4242" readonly>
+              <div style="display:flex;gap:6px">
+                <input class="cp-input" placeholder="MM/YY" value="12/27" readonly>
+                <input class="cp-input" placeholder="CVC" value="•••" readonly>
+              </div>
+              <div class="cp-btn" onclick="showToast('Payment processed — $49 · Stripe charge succeeded')">Start your 14-day trial</div>
+              <div style="font-size:10px;color:var(--subtle);text-align:center;margin-top:6px">No card charged until trial ends · Cancel anytime</div>
+            </div>
+          </div>
+        </div>
+        <div id="gr-billing" style="display:none">
+          <div class="trial-wrap">
+            <div class="trial-label">Trial — Acme Plumbing</div>
+            <div class="trial-bar"><div class="trial-fill" style="width:64%"></div></div>
+            <div class="trial-row"><span>Day 9 of 14</span><span>5 days left</span></div>
+            <button class="btn btn-primary" style="width:100%;margin-bottom:10px" onclick="showToast('Upgrade email queued')">Upgrade to paid</button>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:.6px;text-transform:uppercase;padding:0 14px 7px">Recent Invoices</div>
+          <div style="padding:0 14px">
+            <div class="inv-row"><span>Nov 2026 · $49</span><span class="inv-status inv-paid">Paid</span></div>
+            <div class="inv-row"><span>Oct 2026 · $49</span><span class="inv-status inv-paid">Paid</span></div>
+            <div class="inv-row"><span>Sep 2026 · $49</span><span class="inv-status inv-paid">Paid</span></div>
+            <div class="inv-row"><span>Aug 2026 · $49</span><span class="inv-status inv-open">Open</span></div>
+          </div>
+        </div>
+        <div id="gr-verify" style="display:none">
+          <div style="padding:4px 0">
+            <div style="font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:.6px;text-transform:uppercase;margin-bottom:9px">Business Verification</div>
+            <div class="inv-row"><span>EIN check</span><span style="color:var(--green);font-weight:700;font-size:10px">✓ Verified</span></div>
+            <div class="inv-row"><span>CNAM lookup</span><span style="color:var(--green);font-weight:700;font-size:10px">✓ Verified</span></div>
+            <div class="inv-row"><span>10DLC campaign</span><span style="color:var(--amber);font-weight:700;font-size:10px">⌛ Pending</span></div>
+            <div class="inv-row"><span>Number porting</span><span style="color:var(--green);font-weight:700;font-size:10px">✓ 3 ported</span></div>
+            <div class="inv-row"><span>SHAKEN/STIR</span><span style="color:var(--green);font-weight:700;font-size:10px">✓ Attested A</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONNECT PANEL -->
+  <div class="panel" id="panel-connect">
+    <div class="conn-left">
+      <div class="integrations-grid">
+        <div class="ig-title">Connected Integrations</div>
+        <div class="ig-cards">
+          <div class="ig-card active-int" onclick="selectInt(this,'HubSpot')"><div class="ig-icon" style="background:rgba(249,115,22,.15)">🟠</div><div><div class="ig-name">HubSpot</div><div class="ig-status ok">● Connected</div></div></div>
+          <div class="ig-card" onclick="selectInt(this,'Salesforce')"><div class="ig-icon" style="background:rgba(56,189,248,.15)">☁️</div><div><div class="ig-name">Salesforce</div><div class="ig-status ok">● Connected</div></div></div>
+          <div class="ig-card" onclick="selectInt(this,'Zapier')"><div class="ig-icon" style="background:rgba(249,115,22,.12)">⚡</div><div><div class="ig-name">Zapier</div><div class="ig-status warn">⚠ 2 paused</div></div></div>
+          <div class="ig-card" onclick="selectInt(this,'Slack')"><div class="ig-icon" style="background:rgba(74,222,128,.12)">💬</div><div><div class="ig-name">Slack</div><div class="ig-status off">○ Not connected</div></div></div>
+        </div>
+      </div>
+      <div class="webhook-panel">
+        <div class="wh-title" id="wh-title">HubSpot Webhooks &amp; Events</div>
+        <div id="webhook-list"></div>
+      </div>
+    </div>
+    <div class="conn-right">
+      <div style="padding:10px 12px 6px;border-bottom:1px solid var(--border);font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:.6px;text-transform:uppercase">CRM Contact Sync</div>
+      <div class="crm-sync" id="crm-contacts"></div>
+    </div>
+  </div>
+
+  <!-- COMMS PANEL -->
+  <div class="panel" id="panel-comms">
+    <div class="comms-threads">
+      <div class="ct-search"><input class="ct-input" placeholder="Search conversations…" oninput="filterThreads(this.value)"></div>
+      <div class="ct-list" id="thread-list"></div>
+    </div>
+    <div class="comms-view">
+      <div class="cv-header">
+        <div class="cv-av" id="cv-av" style="background:var(--p)">JD</div>
+        <div>
+          <div style="font-size:13px;font-weight:600" id="cv-name">Jake D. — Acme Plumbing</div>
+          <div style="font-size:11px;color:var(--muted)">+1 (416) 555-0183 · 3 messages today</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm" onclick="showToast('Jake D. opened in HubSpot')">HubSpot ↗</button>
+          <button class="btn btn-ghost btn-sm" onclick="showToast('Call log added')">Log call</button>
+        </div>
+      </div>
+      <div class="cv-msgs" id="cv-msgs"></div>
+      <div class="cv-footer">
+        <input class="cv-input" id="sms-input" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendSMS()">
+        <button class="cv-send" onclick="sendSMS()">Send</button>
+      </div>
+    </div>
+    <div class="comms-right">
+      <div style="font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Customer Info</div>
+      <div class="inv-row"><span>Company</span><span style="font-weight:600">Acme Plumbing</span></div>
+      <div class="inv-row"><span>Plan</span><span style="color:var(--p2);font-weight:600">Growth</span></div>
+      <div class="inv-row"><span>Status</span><span style="color:var(--green);font-weight:600">Active</span></div>
+      <div class="inv-row"><span>SMS sent</span><span style="font-weight:600;font-family:'JetBrains Mono',sans-serif;font-size:11px">812 / 2000</span></div>
+      <div class="inv-row"><span>Since</span><span style="font-weight:600">Mar 2026</span></div>
+      <div style="margin-top:10px;font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px">Recent Activity</div>
+      <div class="alog-item" style="font-size:11px;padding:4px 0;border-bottom:1px solid var(--divider);color:var(--muted)">📞 Inbound call · 4 min</div>
+      <div class="alog-item" style="font-size:11px;padding:4px 0;border-bottom:1px solid var(--divider);color:var(--muted)">💬 SMS campaign sent · 48 contacts</div>
+      <div class="alog-item" style="font-size:11px;padding:4px 0;border-bottom:1px solid var(--divider);color:var(--muted)">📋 Contact synced → HubSpot</div>
+      <div class="alog-item" style="font-size:11px;padding:4px 0;color:var(--muted)">🔁 Number ported · +1 416 555 0183</div>
+    </div>
+  </div>
+
+  <!-- QUEUE PANEL -->
+  <div class="panel" id="panel-queue">
+    <div class="queue-grid">
+      <div class="queue-card" style="--qc:linear-gradient(90deg,var(--p),var(--p2))"><div class="qc-title">Messages / sec</div><div class="qc-num">847</div><div class="qc-sub">↑ 12% vs avg</div></div>
+      <div class="queue-card" style="--qc:linear-gradient(90deg,var(--green),#86efac)"><div class="qc-title">Queue depth</div><div class="qc-num" style="color:var(--green)">4,201</div><div class="qc-sub">healthy · p99 &lt; 200ms</div></div>
+      <div class="queue-card" style="--qc:linear-gradient(90deg,var(--amber),#fde68a)"><div class="qc-title">Dead letter</div><div class="qc-num" style="color:var(--amber)">3</div><div class="qc-sub">↑ 1 since last deploy</div></div>
+      <div class="queue-card" style="--qc:linear-gradient(90deg,var(--p5),#bae6fd)"><div class="qc-title">Consumers</div><div class="qc-num" style="color:var(--p5)">18</div><div class="qc-sub">6 services · 3 replicas each</div></div>
+    </div>
+    <div style="font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:.7px;text-transform:uppercase;margin-bottom:9px">RabbitMQ Event Topics</div>
+    <div id="queue-events"></div>
+  </div>
+
+  <!-- CODE PANEL -->
+  <div class="panel" id="panel-code">
+    <div class="code-tabs">
+      <div class="code-tab active" onclick="switchCode('relay',this)">GraphQL / Relay</div>
+      <div class="code-tab" onclick="switchCode('rabbitmq',this)">RabbitMQ</div>
+      <div class="code-tab" onclick="switchCode('stripe',this)">Stripe Webhook</div>
+      <div class="code-tab" onclick="switchCode('relay-frag',this)">Relay Fragment</div>
+      <div class="code-tab" onclick="switchCode('vitest',this)">Vitest Test</div>
+    </div>
+    <div class="code-content">
+      <div class="code-block" id="code-display"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header"><h3 id="modal-title">Open Pull Request</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body" id="modal-body">
+      <div class="fl"><label>Branch</label><input class="fi" value="feat/checkout-tax-line" readonly></div>
+      <div class="fl"><label>Title</label><input class="fi" id="pr-title" placeholder="[Gateway] Add tax line to checkout preview"></div>
+      <div class="fl"><label>Description</label><textarea class="fi" rows="3" placeholder="What does this change?"></textarea></div>
+      <div class="fl"><label>Reviewers</label><input class="fi" value="@senior-eng @squad-gateway"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitPR()">Open PR →</button>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+// TOAST
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.display='block';
+  clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2800);
+}
+
+// MODAL
+function openModal(type){
+  document.getElementById('modal-title').textContent='Open Pull Request';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
+function submitPR(){
+  const title=document.getElementById('pr-title').value.trim()||'[Gateway] Update';
+  closeModal();showToast('PR "'+title+'" opened on GitHub ✓');
+}
+
+// PANEL NAV
+function showPanel(id,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  else{ const n=document.getElementById('nav-'+id); if(n) n.classList.add('active'); }
+  const titles={
+    gateway:'Gateway Squad — Signup Funnel',
+    connect:'Connect Squad — Integrations',
+    comms:'Connect Squad — Messaging',
+    queue:'Connect Squad — Message Queue',
+    code:'Codebase — TypeScript / React / Node',
+  };
+  const pills={
+    gateway:'● p99 &lt; 180ms',
+    connect:'● 4 integrations active',
+    comms:'● 3 unread conversations',
+    queue:'● RabbitMQ 847 msg/s',
+    code:'● main · last commit 23 min ago',
+  };
+  document.getElementById('tb-title').textContent=titles[id]||id;
+  document.getElementById('tb-pill').innerHTML=pills[id]||'';
+  if(id==='code') initCode();
+}
+
+// SQUAD TOGGLE
+function setSquad(sq){
+  document.getElementById('sq-gateway').classList.toggle('on',sq==='gateway');
+  document.getElementById('sq-connect').classList.toggle('on',sq==='connect');
+  if(sq==='gateway') showPanel('gateway',document.getElementById('nav-gateway'));
+  else showPanel('connect',document.getElementById('nav-connect'));
+}
+
+// GATEWAY TAB
+function switchGrTab(tab,el){
+  document.querySelectorAll('.gr-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['checkout','billing','verify'].forEach(t=>{
+    document.getElementById('gr-'+t).style.display=t===tab?'block':'none';
+  });
+}
+
+// FUNNEL
+const FUNNEL=[
+  {label:'Visited',n:'8,420',pct:'100%',color:'rgba(91,110,248,.8)'},
+  {label:'Started signup',n:'3,105',pct:'37%',color:'rgba(91,110,248,.65)'},
+  {label:'Entered billing',n:'1,840',pct:'22%',color:'rgba(91,110,248,.5)'},
+  {label:'Trial started',n:'1,204',pct:'14%',color:'rgba(91,110,248,.38)'},
+  {label:'Converted',n:'457',pct:'5.4%',color:'rgba(91,110,248,.22)'},
+];
+function buildFunnel(){
+  const wrap=document.getElementById('funnel');
+  FUNNEL.forEach((f,i)=>{
+    const col=document.createElement('div');
+    col.className='funnel-stage';
+    col.innerHTML=`<div class="funnel-bar" style="background:${f.color}" onclick="showToast('${f.label}: ${f.n} users (${f.pct})')">
+      ${f.n}${i<FUNNEL.length-1?'<div class="arrow">›</div>':''}
+    </div>
+    <div class="funnel-label">${f.label}</div>
+    <div class="funnel-pct">${f.pct}</div>`;
+    wrap.appendChild(col);
+  });
+}
+
+// LIVE EVENTS FEED
+const EVENTS=[
+  {color:'var(--green)',text:'Acme Plumbing — trial started · Growth plan',t:'just now'},
+  {color:'var(--p)',text:'Rivera Auto — entered billing step',t:'2m'},
+  {color:'var(--amber)',text:'Bright Dental — number port initiated · +1 647-555-0291',t:'4m'},
+  {color:'var(--green)',text:'Sunrise HVAC — converted to paid · $79/mo',t:'6m'},
+  {color:'var(--red)',text:'FastFit Gym — checkout abandoned at billing',t:'9m'},
+  {color:'var(--p)',text:'Oakwood Legal — entered signup flow',t:'11m'},
+  {color:'var(--green)',text:'Metro Cleaners — EIN verified',t:'13m'},
+];
+function buildEvents(){
+  const wrap=document.getElementById('events-feed');
+  EVENTS.forEach(e=>{
+    const d=document.createElement('div');d.className='ev-item';
+    d.innerHTML=`<div class="ev-dot" style="background:${e.color}"></div>
+    <span class="ev-text">${e.text}</span>
+    <span class="ev-time">${e.t}</span>`;
+    wrap.appendChild(d);
+  });
+}
+let evTimer;
+function startLiveEvents(){
+  const MORE=[
+    {color:'var(--green)',text:'Westside Realty — trial started',t:''},
+    {color:'var(--p)',text:'TrueNorth Tiles — billing step entered',t:''},
+    {color:'var(--amber)',text:'LakeFront Dental — 10DLC campaign submitted',t:''},
+    {color:'var(--green)',text:'Greenway Auto — converted · $49/mo',t:''},
+  ];
+  let i=0;
+  evTimer=setInterval(()=>{
+    const wrap=document.getElementById('events-feed');
+    if(!wrap) return;
+    const e=MORE[i%MORE.length];i++;
+    e.t='just now';
+    const d=document.createElement('div');d.className='ev-item';
+    d.innerHTML=`<div class="ev-dot" style="background:${e.color}"></div>
+    <span class="ev-text">${e.text}</span><span class="ev-time">${e.t}</span>`;
+    d.style.opacity='0';d.style.transition='opacity .4s';
+    wrap.prepend(d);
+    setTimeout(()=>d.style.opacity='1',30);
+    while(wrap.children.length>9) wrap.removeChild(wrap.lastChild);
+  },4200);
+}
+
+// WEBHOOKS
+const WEBHOOKS={
+  HubSpot:[
+    {method:'POST',name:'contact.propertyChange',status:'ok',payload:`{\n  <span class="ck">"event"</span>: <span class="cs">"contact.propertyChange"</span>,\n  <span class="ck">"objectId"</span>: <span class="cn">1823041</span>,\n  <span class="ck">"propertyName"</span>: <span class="cs">"phone"</span>,\n  <span class="ck">"propertyValue"</span>: <span class="cs">"+16475550183"</span>\n}`},
+    {method:'POST',name:'deal.creation',status:'ok',payload:`{\n  <span class="ck">"event"</span>: <span class="cs">"deal.creation"</span>,\n  <span class="ck">"objectId"</span>: <span class="cn">9920012</span>,\n  <span class="ck">"dealstage"</span>: <span class="cs">"appointmentscheduled"</span>\n}`},
+    {method:'GET',name:'contacts.sync',status:'ok',payload:`<span class="cc">// Pull latest contacts for Quo number matching\n// Runs every 15 min via cron job</span>`},
+  ],
+  Salesforce:[
+    {method:'POST',name:'CallLog.insert',status:'ok',payload:`{\n  <span class="ck">"sObjectType"</span>: <span class="cs">"Task"</span>,\n  <span class="ck">"Subject"</span>: <span class="cs">"Call logged via Quo"</span>,\n  <span class="ck">"DurationInMinutes"</span>: <span class="cn">4</span>\n}`},
+    {method:'POST',name:'SMS.outbound',status:'fail',payload:`<span class="cf">Error</span>: <span class="cs">"FIELD_INTEGRITY_EXCEPTION"</span>\n<span class="cc">// Phone field format mismatch — fix pending</span>`},
+  ],
+  Zapier:[
+    {method:'POST',name:'zap.trigger.sms_received',status:'ok',payload:`{\n  <span class="ck">"from"</span>: <span class="cs">"+16475550183"</span>,\n  <span class="ck">"body"</span>: <span class="cs">"Appointment confirmed"</span>\n}`},
+    {method:'POST',name:'zap.trigger.call_ended',status:'warn',payload:`<span class="cc">// Paused — rate limit exceeded\n// Quota resets at midnight UTC</span>`},
+  ],
+  Slack:[{method:'POST',name:'Not configured',status:'off',payload:`<span class="cc">// Connect Slack to receive call/SMS notifications</span>`}],
+};
+function buildWebhooks(int){
+  const wrap=document.getElementById('webhook-list');
+  wrap.innerHTML='';
+  document.getElementById('wh-title').textContent=int+' Webhooks & Events';
+  (WEBHOOKS[int]||[]).forEach((w,i)=>{
+    const cls={'ok':'wh-ok','fail':'wh-fail','warn':'me-lag','off':''}[w.status]||'';
+    const lbl={'ok':'● Live','fail':'✕ Failed','warn':'⚠ Paused','off':'○ Off'}[w.status]||'';
+    const bodyId='wb-'+i;
+    const d=document.createElement('div');d.className='wh-event';
+    d.innerHTML=`<div class="wh-header" onclick="toggleWh('${bodyId}')">
+      <span class="wh-method ${w.method==='POST'?'wh-post':'wh-get'}">${w.method}</span>
+      <span class="wh-name">${w.name}</span>
+      <span class="wh-status ${cls}">${lbl}</span>
+    </div>
+    <div class="wh-body" id="${bodyId}"><pre>${w.payload}</pre></div>`;
+    wrap.appendChild(d);
+  });
+}
+function toggleWh(id){
+  const b=document.getElementById(id);
+  b.classList.toggle('open');
+}
+function selectInt(el,name){
+  document.querySelectorAll('.ig-card').forEach(c=>c.classList.remove('active-int'));
+  el.classList.add('active-int');
+  buildWebhooks(name);
+  showToast(name+' selected');
+}
+
+// CRM CONTACTS
+const CRM_CONTACTS=[
+  {init:'JD',name:'Jake D.',role:'Owner · Acme Plumbing',color:'var(--p)',status:'synced'},
+  {init:'MR',name:'Maria R.',role:'Manager · Rivera Auto',color:'var(--p4)',status:'synced'},
+  {init:'SC',name:'Sam C.',role:'Dentist · Bright Dental',color:'var(--green)',status:'pending-sync'},
+  {init:'TH',name:'Tom H.',role:'CEO · Sunrise HVAC',color:'var(--p5)',status:'synced'},
+  {init:'AP',name:'Ali P.',role:'Trainer · FastFit Gym',color:'var(--red)',status:'pending-sync'},
+];
+function buildCRMContacts(){
+  const wrap=document.getElementById('crm-contacts');
+  CRM_CONTACTS.forEach(c=>{
+    const d=document.createElement('div');d.className='crm-contact';
+    d.onclick=()=>showToast('Opening '+c.name+' in HubSpot…');
+    d.innerHTML=`<div class="crm-av" style="background:${c.color}">${c.init}</div>
+    <div><div class="crm-name">${c.name}</div><div class="crm-role">${c.role}</div></div>
+    <span class="crm-sync-badge ${c.status}">${c.status==='synced'?'✓ Synced':'⌛ Pending'}</span>`;
+    wrap.appendChild(d);
+  });
+}
+
+// THREADS
+const THREADS=[
+  {init:'JD',name:'Jake D.',preview:'Got your message, thanks!',time:'2m',color:'var(--p)',unread:true},
+  {init:'MR',name:'Maria R.',preview:'Can you resend the invoice?',time:'18m',color:'var(--p4)',unread:true},
+  {init:'SC',name:'Sam C.',preview:'Appointment confirmed for Fri',time:'1h',color:'var(--green)',unread:false},
+  {init:'TH',name:'Tom H.',preview:'What's the porting status?',time:'2h',color:'var(--p5)',unread:true},
+  {init:'AP',name:'Ali P.',preview:'I need to cancel my trial',time:'3h',color:'var(--red)',unread:false},
+];
+function buildThreads(list){
+  const wrap=document.getElementById('thread-list');
+  wrap.innerHTML='';
+  list.forEach((t,i)=>{
+    const d=document.createElement('div');
+    d.className='ct-item'+(i===0?' active':'');
+    d.innerHTML=`<div style="display:flex;align-items:center;gap:7px">
+      <div class="crm-av" style="background:${t.color};width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">${t.init}</div>
+      <div style="flex:1;min-width:0">
+        <div class="ct-name">${t.name}${t.unread?'<div class="ct-unread"></div>':''}</div>
+        <div class="ct-preview">${t.preview}</div>
+      </div>
+      <div class="ct-time">${t.time}</div>
+    </div>`;
+    d.onclick=()=>loadThread(t,d);
+    wrap.appendChild(d);
+  });
+}
+function filterThreads(q){
+  buildThreads(THREADS.filter(t=>!q||t.name.toLowerCase().includes(q.toLowerCase())));
+}
+const MSGS={
+  'Jake D.':[
+    {out:false,text:'Hey, checking in — did the Quo number work for your scheduling system?',t:'10:04 AM'},
+    {out:true,text:'Hi Jake! Yes it's working great — our team has been using it since yesterday. Very smooth.',t:'10:11 AM'},
+    {out:false,text:'Amazing! Do you need help setting up the HubSpot sync? Takes 2 minutes.',t:'10:13 AM'},
+    {out:true,text:'Got your message, thanks! I'll set that up today.',t:'10:15 AM'},
+  ],
+  'Maria R.':[
+    {out:true,text:'Hi Maria, your October invoice is attached. Let me know if you need anything.',t:'Yesterday'},
+    {out:false,text:'Can you resend the invoice? I can't find the email.',t:'9:40 AM'},
+  ],
+};
+function loadThread(t,el){
+  document.querySelectorAll('.ct-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('cv-av').textContent=t.init;
+  document.getElementById('cv-av').style.background=t.color;
+  document.getElementById('cv-name').textContent=t.name+' — Quo Business';
+  const msgs=MSGS[t.name]||[{out:false,text:t.preview,t:''}];
+  const wrap=document.getElementById('cv-msgs');
+  wrap.innerHTML='';
+  msgs.forEach(m=>{
+    const b=document.createElement('div');
+    b.className='sms-bubble '+(m.out?'sms-out':'sms-in');
+    b.textContent=m.text;
+    const ts=document.createElement('div');
+    ts.className='sms-time'+(m.out?' right':'');
+    ts.textContent=m.t;
+    wrap.appendChild(b);wrap.appendChild(ts);
+  });
+  wrap.scrollTop=wrap.scrollHeight;
+}
+function sendSMS(){
+  const inp=document.getElementById('sms-input');
+  const val=inp.value.trim();if(!val) return;
+  inp.value='';
+  const wrap=document.getElementById('cv-msgs');
+  const b=document.createElement('div');b.className='sms-bubble sms-out';b.textContent=val;
+  const ts=document.createElement('div');ts.className='sms-time right';ts.textContent='just now';
+  wrap.appendChild(b);wrap.appendChild(ts);
+  wrap.scrollTop=wrap.scrollHeight;
+  showToast('SMS sent ✓ · logged to HubSpot');
+}
+
+// QUEUE EVENTS
+const QUEUE_EVENTS=[
+  {topic:'sms.outbound.enqueue',status:'ok',lag:'12ms',payload:`<span class="ck">"to"</span>: <span class="cs">"+16475550183"</span>, <span class="ck">"body"</span>: <span class="cs">"Reminder: appt tomorrow 10am"</span>`},
+  {topic:'billing.subscription.created',status:'ok',lag:'8ms',payload:`<span class="ck">"customerId"</span>: <span class="cs">"cus_Qx9z"</span>, <span class="ck">"plan"</span>: <span class="cs">"growth"</span>, <span class="ck">"amount"</span>: <span class="cn">4900</span>`},
+  {topic:'number.port.requested',status:'ok',lag:'23ms',payload:`<span class="ck">"number"</span>: <span class="cs">"+16475550291"</span>, <span class="ck">"carrier"</span>: <span class="cs">"Rogers"</span>`},
+  {topic:'crm.contact.sync',status:'ok',lag:'41ms',payload:`<span class="ck">"source"</span>: <span class="cs">"hubspot"</span>, <span class="ck">"contactId"</span>: <span class="cn">1823041</span>`},
+  {topic:'call.ended.log',status:'fail',lag:'—',payload:`<span class="cf">RetryError</span>: <span class="cs">"upstream timeout"</span> <span class="cc">// DLQ after 3 retries</span>`},
+  {topic:'sms.inbound.receive',status:'ok',lag:'9ms',payload:`<span class="ck">"from"</span>: <span class="cs">"+16475550183"</span>, <span class="ck">"body"</span>: <span class="cs">"Confirmed"</span>`},
+];
+function buildQueue(){
+  const wrap=document.getElementById('queue-events');
+  QUEUE_EVENTS.forEach((e,i)=>{
+    const cls={'ok':'me-ok','fail':'me-fail','warn':'me-lag'}[e.status];
+    const lbl={'ok':'● ACK','fail':'✕ DLQ','warn':'⚠ Lag'}[e.status];
+    const bid='qe-'+i;
+    const d=document.createElement('div');d.className='msg-event';
+    d.innerHTML=`<div class="me-header" onclick="toggleMe('${bid}')">
+      <span class="me-topic">${e.topic}</span>
+      <span class="me-lag-ms">${e.lag}</span>
+      <span class="me-status ${cls}">${lbl}</span>
+    </div>
+    <div class="me-body" id="${bid}"><pre>${e.payload}</pre></div>`;
+    wrap.appendChild(d);
+  });
+}
+function toggleMe(id){document.getElementById(id).classList.toggle('open');}
+
+// CODE SNIPPETS
+const CODE_SNIPPETS={
+  relay:`<pre><span class="cc">// Checkout mutation — Relay + GraphQL</span>
+<span class="ck">mutation</span> <span class="cn">StartTrialMutation</span>(<span class="co">$input</span>: <span class="cn">StartTrialInput</span>!) {
+  startTrial(input: <span class="co">$input</span>) {
+    subscription {
+      id
+      plan { <span class="cs">name price interval</span> }
+      trialEndsAt
+      status
+    }
+    errors { <span class="cs">field message</span> }
+  }
+}
+
+<span class="cc">// React component with Relay useMutation</span>
+<span class="ck">const</span> [<span class="cn">startTrial</span>, isPending] = <span class="cn">useMutation</span><<span class="cn">StartTrialMutation</span>>(graphql\`
+  <span class="cf">mutation</span> StartTrialMutation(<span class="co">$input</span>: StartTrialInput!) {
+    startTrial(input: <span class="co">$input</span>) { <span class="cs">...</span> }
+  }
+\`);
+
+<span class="ck">function</span> <span class="cn">handleSubmit</span>() {
+  startTrial({
+    variables: { input: { planId, paymentMethodId } },
+    onCompleted({ startTrial }) {
+      <span class="ck">if</span> (startTrial.errors.length) <span class="ck">return</span> setErrors(startTrial.errors);
+      router.push(<span class="cs">'/dashboard'</span>);
+    },
+  });
+}</pre>`,
+  rabbitmq:`<pre><span class="cc">// Publish to RabbitMQ exchange — Node.js</span>
+<span class="ck">import</span> { <span class="cn">getRabbitChannel</span> } <span class="ck">from</span> <span class="cs">'@quo/rabbit'</span>;
+
+<span class="ck">export async function</span> <span class="cn">publishSmsOutbound</span>(
+  to: <span class="cn">string</span>,
+  body: <span class="cn">string</span>,
+  meta: <span class="cn">SmsMeta</span>,
+): Promise<<span class="cn">void</span>> {
+  <span class="ck">const</span> ch = <span class="ck">await</span> getRabbitChannel();
+  ch.publish(
+    <span class="cs">'quo.events'</span>,
+    <span class="cs">'sms.outbound.enqueue'</span>,
+    Buffer.from(JSON.stringify({ to, body, meta, ts: Date.now() })),
+    { persistent: <span class="ck">true</span>, contentType: <span class="cs">'application/json'</span> },
+  );
+}
+
+<span class="cc">// Consumer in sms-service</span>
+ch.consume(<span class="cs">'sms.outbound'</span>, <span class="ck">async</span> (msg) => {
+  <span class="ck">if</span> (!msg) <span class="ck">return</span>;
+  <span class="ck">const</span> { to, body } = JSON.parse(msg.content.toString());
+  <span class="ck">await</span> twilioClient.messages.create({ to, from: <span class="cn">POOL_NUMBER</span>, body });
+  ch.ack(msg);
+}, { noAck: <span class="ck">false</span> });</pre>`,
+  stripe:`<pre><span class="cc">// Stripe webhook handler — Express + TypeScript</span>
+<span class="ck">import</span> Stripe <span class="ck">from</span> <span class="cs">'stripe'</span>;
+
+<span class="ck">const</span> stripe = <span class="ck">new</span> <span class="cn">Stripe</span>(process.env.STRIPE_SECRET_KEY!);
+
+router.post(<span class="cs">'/webhooks/stripe'</span>,
+  express.raw({ type: <span class="cs">'application/json'</span> }),
+  <span class="ck">async</span> (req, res) => {
+    <span class="ck">const</span> sig = req.headers[<span class="cs">'stripe-signature'</span>] <span class="ck">as</span> <span class="cn">string</span>;
+    <span class="ck">const</span> event = stripe.webhooks.constructEvent(
+      req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!
+    );
+    <span class="ck">switch</span> (event.type) {
+      <span class="ck">case</span> <span class="cs">'invoice.payment_succeeded'</span>:
+        <span class="ck">await</span> activateSubscription(event.data.object <span class="ck">as</span> Stripe.Invoice);
+        <span class="ck">break</span>;
+      <span class="ck">case</span> <span class="cs">'customer.subscription.deleted'</span>:
+        <span class="ck">await</span> deprovisionAccount(event.data.object <span class="ck">as</span> Stripe.Subscription);
+        <span class="ck">break</span>;
+    }
+    res.json({ received: <span class="ck">true</span> });
+  }
+);</pre>`,
+  'relay-frag':`<pre><span class="cc">// Relay Fragment — CheckoutPlan component</span>
+<span class="ck">import</span> { useFragment, graphql } <span class="ck">from</span> <span class="cs">'react-relay'</span>;
+
+<span class="ck">const</span> CheckoutPlan_subscription = graphql\`
+  <span class="cf">fragment</span> CheckoutPlan_subscription <span class="ck">on</span> Subscription {
+    plan {
+      id
+      name
+      price
+      interval
+      features
+    }
+    trialEndsAt
+    status
+  }
+\`;
+
+<span class="ck">export function</span> <span class="cn">CheckoutPlan</span>({ subscriptionRef }) {
+  <span class="ck">const</span> sub = useFragment(CheckoutPlan_subscription, subscriptionRef);
+  <span class="ck">return</span> (
+    <<span class="cn">PlanCard</span>
+      name={sub.plan.name}
+      price={<span class="cs">\`\$\${sub.plan.price / 100}/\${sub.plan.interval}\`</span>}
+      features={sub.plan.features}
+      trialEnd={sub.trialEndsAt}
+    />
+  );
+}</pre>`,
+  vitest:`<pre><span class="cc">// Vitest + React Testing Library</span>
+<span class="ck">import</span> { render, screen, fireEvent } <span class="ck">from</span> <span class="cs">'@testing-library/react'</span>;
+<span class="ck">import</span> { vi, describe, it, expect } <span class="ck">from</span> <span class="cs">'vitest'</span>;
+<span class="ck">import</span> { <span class="cn">CheckoutForm</span> } <span class="ck">from</span> <span class="cs">'./CheckoutForm'</span>;
+
+<span class="ck">const</span> mockStartTrial = vi.fn();
+vi.mock(<span class="cs">'react-relay'</span>, () => ({
+  useMutation: () => [mockStartTrial, <span class="ck">false</span>],
+}));
+
+describe(<span class="cs">'CheckoutForm'</span>, () => {
+  it(<span class="cs">'calls startTrial mutation on submit'</span>, <span class="ck">async</span> () => {
+    render(<<span class="cn">CheckoutForm</span> planId=<span class="cs">"plan_growth"</span> />);
+    fireEvent.change(screen.getByPlaceholderText(<span class="cs">'Card number'</span>), {
+      target: { value: <span class="cs">'4242 4242 4242 4242'</span> },
+    });
+    fireEvent.click(screen.getByText(<span class="cs">'Start your 14-day trial'</span>));
+    expect(mockStartTrial).toHaveBeenCalledWith(
+      expect.objectContaining({ variables: expect.objectContaining({ input: expect.any(Object) }) })
+    );
+  });
+  it(<span class="cs">'shows error when mutation fails'</span>, <span class="ck">async</span> () => {
+    mockStartTrial.mockImplementation(({ onCompleted }) =>
+      onCompleted({ startTrial: { errors: [{ field: <span class="cs">'card'</span>, message: <span class="cs">'Declined'</span> }] } })
+    );
+    <span class="cc">// ... assert error state</span>
+  });
+});</pre>`,
+};
+let codeInited=false;
+function initCode(){
+  if(codeInited) return;
+  codeInited=true;
+  document.getElementById('code-display').innerHTML=CODE_SNIPPETS['relay'];
+}
+function switchCode(key,el){
+  document.querySelectorAll('.code-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('code-display').innerHTML=CODE_SNIPPETS[key]||'';
+}
+
+// INIT
+buildFunnel();
+buildEvents();
+startLiveEvents();
+buildWebhooks('HubSpot');
+buildCRMContacts();
+buildThreads(THREADS);
+buildQueue();
+// load first thread
+setTimeout(()=>{
+  const first=document.querySelector('.ct-item');
+  if(first) loadThread(THREADS[0],first);
+},100);
+</script>
+
+</body></html>
